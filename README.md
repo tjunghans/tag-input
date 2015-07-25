@@ -6,7 +6,7 @@
 
 A react component that renders an input field. When hitting enter or entering a comma, the value will be used to create a tag. Tags are displayed in front of the input.
 
-[Demo](http://tangiblej.neocities.org/react-tag-input-example.html)
+[Demo](http://tangiblej.neocities.org/tag-input-example.html)
 
 
 ## Install
