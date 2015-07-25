@@ -1,13 +1,12 @@
-# React-Round-Trip-Rate
+# React-Tag-Input
 
 [![SemVer]](http://semver.org)
 [![License]](https://github.com/tjunghans/react-round-trip-rate/blob/master/LICENCE)
-[![Build Status](https://travis-ci.org/tjunghans/react-round-trip-rate.svg?branch=master)](https://travis-ci.org/tjunghans/react-round-trip-rate)
+[![Build Status](https://travis-ci.org/tjunghans/react-tag-input.svg?branch=master)](https://travis-ci.org/tjunghans/react-tag-input)
 
-A react component that renders a button that, if clicked repeatedly changes
-state according to `steps`(default 3, for example for min, normal and max).
+A react component that renders an input field. When hitting enter or entering a comma, the value will be used to create a tag. Tags are displayed in front of the input.
 
-[Demo](http://tangiblej.neocities.org/react-round-trip-rate-example.html)
+[Demo](http://tangiblej.neocities.org/react-tag-input-example.html)
 
 
 ## Install
@@ -15,7 +14,7 @@ state according to `steps`(default 3, for example for min, normal and max).
 Install as node dependency:
 
 ```
-npm install react-round-trip-rate --save
+npm install react-tag-input --save
 ```
 
 
@@ -38,23 +37,12 @@ npm start & npm run watch
 ## Usage
 
 ```javascript
-
 var React = require('react');
-var roundTripRate = require('react-round-trip-rate');
+var tagInput = require('../');
 
-React.createElement(roundTripRate, {
-  steps: 3, // steps as in good, very good, excellent
-  label: 'Java skill', // the name of what is being rated. In this case Java skill
-  cssClass: 'rating'
-}));
+React.render(React.createElement(tagInput),
+  document.querySelector('#content'));
 ```
-
-## Properties
-
-- `label`: button label
-- `steps`: number of rating steps
-- `cssClass`: css class to apply to the button
-
 
 ## License
 
