@@ -56,26 +56,38 @@ describe('component', function () {
   it('adds tag on enter', function () {
     var input = addTagOnEnter('foo');
 
-    assert.equal($('.pill', div).length, 1);
-    assert.equal($('.pill', div)[0].textContent, 'foo');
+    assert.equal($('.tag', div).length, 1);
+    assert.equal($('.tag', div)[0].textContent, 'foo');
     assert.equal(input.value, '');
   });
 
   it('adds tag if comma is detected', function () {
     var input = addTag('foo,');
 
-    assert.equal($('.pill', div).length, 1);
-    assert.equal($('.pill', div)[0].textContent, 'foo');
+    assert.equal($('.tag', div).length, 1);
+    assert.equal($('.tag', div)[0].textContent, 'foo');
     assert.equal(input.value, '');
+  });
+
+  it('converts tag to lowercase', function () {
+    addTagOnEnter('FOo');
+
+    assert.equal($('.tag', div)[0].textContent, 'foo');
+  });
+
+  it('trims whitespace', function () {
+    addTagOnEnter(' foo   ');
+
+    assert.equal($('.tag', div)[0].textContent, 'foo');
   });
 
   it('adds another tag', function () {
     addTagOnEnter('foo');
     addTagOnEnter('bar');
 
-    assert.equal($('.pill', div).length, 2);
-    assert.equal($('.pill', div)[0].textContent, 'foo');
-    assert.equal($('.pill', div)[1].textContent, 'bar');
+    assert.equal($('.tag', div).length, 2);
+    assert.equal($('.tag', div)[0].textContent, 'foo');
+    assert.equal($('.tag', div)[1].textContent, 'bar');
   });
 
   it('ignores duplicate tags', function () {
@@ -85,7 +97,7 @@ describe('component', function () {
 
     assert.equal($('.pill', div).length, 1);
     assert.equal($('.pill.highlight', div).length, 1);
-    assert.equal($('.pill', div)[0].textContent, 'foo');
+    assert.equal($('.pill .tag', div)[0].textContent, 'foo');
 
     clock.tick(100);
     assert.equal($('.pill.highlight', div).length, 0);
@@ -93,6 +105,12 @@ describe('component', function () {
     clock.restore();
   });
 
+  it('removes tag', function () {
+    addTagOnEnter('foo');
 
+    TestUtils.Simulate.click($('.remove', div)[0]);
+
+    assert.equal($('.pill', div).length, 0);
+  });
 });
 
