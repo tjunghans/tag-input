@@ -17,13 +17,14 @@ function $(selector, context) {
 
 describe('component', function () {
   var div;
+  var input;
 
   function render() {
     React.render(React.createElement(tagInput), div);
+    input = $('input.new-tag', div)[0];
   }
 
   function addTag(value) {
-    var input = $('input.new-tag', div)[0];
     input.value = value;
 
     TestUtils.Simulate.change(input);
@@ -32,21 +33,24 @@ describe('component', function () {
   }
 
   function addTagOnEnter(value) {
-    var input = addTag(value);
+    addTag(value);
     TestUtils.Simulate.keyUp(input, {keyCode: 13});
-
-    return input;
   }
 
   beforeEach(function () {
     div = document.createElement("div");
+    document.body.appendChild(div);
     render();
+    sinon.stub(process, 'nextTick');
   });
 
   afterEach(function () {
     if (div) {
       React.unmountComponentAtNode(div);
+      div.parentNode.removeChild(div);
     }
+    input = null;
+    process.nextTick.restore();
   });
 
   it('renders input', function () {
@@ -54,7 +58,7 @@ describe('component', function () {
   });
 
   it('adds tag on enter', function () {
-    var input = addTagOnEnter('foo');
+    addTagOnEnter('foo');
 
     assert.equal($('.tag', div).length, 1);
     assert.equal($('.tag', div)[0].textContent, 'foo');
@@ -62,7 +66,7 @@ describe('component', function () {
   });
 
   it('adds tag if comma is detected', function () {
-    var input = addTag('foo,');
+    addTag('foo,');
 
     assert.equal($('.tag', div).length, 1);
     assert.equal($('.tag', div)[0].textContent, 'foo');
@@ -110,6 +114,30 @@ describe('component', function () {
 
     TestUtils.Simulate.click($('.remove', div)[0]);
 
+    assert.equal($('.pill', div).length, 0);
+  });
+
+  it('focuses on input on render', function () {
+    assert(document.activeElement === $('input.new-tag', div)[0]);
+  });
+
+  it('removes tag on backspace', function () {
+    addTagOnEnter('foo');
+
+    TestUtils.Simulate.keyDown(input, {keyCode: 8});
+
+    assert.equal($('.pill', div).length, 0);
+  });
+
+  it('does not remove tag if input has contents', function () {
+    addTagOnEnter('foo');
+    TestUtils.Simulate.change(input, { target: { value: 'b' } });
+
+    TestUtils.Simulate.keyDown(input, {keyCode: 8});
+    TestUtils.Simulate.change(input, { target: { value: '' } });
+    assert.equal($('.pill', div).length, 1);
+
+    TestUtils.Simulate.keyDown(input, {keyCode: 8});
     assert.equal($('.pill', div).length, 0);
   });
 });
