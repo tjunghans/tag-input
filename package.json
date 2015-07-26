@@ -2,7 +2,7 @@
   "name": "tag-input",
   "description": "Input that converts comma separated words to tags",
   "author": "Thomas Junghans <thomas.junghans@gmail.com>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./lib/tag-input",
   "scripts": {
     "test:browser": "mochify",
