@@ -7,6 +7,7 @@
   "scripts": {
     "test:browser": "mochify",
     "watch:browser": "npm run test:browser -- --watch",
+    "wd": "mochify --wd",
     "lint": "jslint --edition=latest --color ./lib/*.js ./test/*.js ./public/main.js",
     "pretest": "npm run lint",
     "test": "npm run test:browser",
