@@ -38,7 +38,7 @@ npm start & npm run watch
 
 ```javascript
 var React = require('react');
-var tagInput = require('../');
+var tagInput = require('tag-input');
 
 React.render(React.createElement(tagInput),
   document.querySelector('#content'));
