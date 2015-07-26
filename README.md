@@ -1,8 +1,8 @@
-# React-Tag-Input
+# Tag-Input (with React)
 
 [![SemVer]](http://semver.org)
-[![License]](https://github.com/tjunghans/react-tag-input/blob/master/LICENCE)
-[![Build Status](https://travis-ci.org/tjunghans/react-tag-input.svg?branch=master)](https://travis-ci.org/tjunghans/react-tag-input)
+[![License]](https://github.com/tjunghans/tag-input/blob/master/LICENCE)
+[![Build Status](https://travis-ci.org/tjunghans/tag-input.svg?branch=master)](https://travis-ci.org/tjunghans/tag-input)
 
 A react component that renders an input field. When hitting enter or entering a comma, the value will be used to create a tag. Tags are displayed in front of the input.
 
