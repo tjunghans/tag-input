@@ -1,5 +1,5 @@
 {
-  "name": "react-tag-input",
+  "name": "tag-input",
   "description": "Input that converts comma separated words to tags",
   "author": "Thomas Junghans <thomas.junghans@gmail.com>",
   "version": "1.0.0",
