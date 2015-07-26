@@ -46,6 +46,13 @@ React.render(React.createElement(tagInput),
   document.querySelector('#content'));
 ```
 
+
+## Component Props
+
+- `onTagChange`: called when a tag is added or removed. Called with tags array.
+- `cssClass`: optional css class for container
+
+
 ## License
 
 MIT
