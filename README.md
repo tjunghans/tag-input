@@ -20,6 +20,8 @@ npm install tag-input --save
 
 ## Quickstart
 
+To test locally change to node_modules/tag-input and run:
+
 ```
 npm start & npm run watch
 ```
