@@ -22,7 +22,6 @@
   "dependencies": {
     "browserify": "^10.2",
     "ecstatic": "^0.8",
-    "raf": "^3.1",
     "react": "^0.13",
     "stylus": "^0.52",
     "uglify-js": "^2.4",

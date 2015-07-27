@@ -158,5 +158,14 @@ describe('component', function () {
     sinon.assert.calledWith(spy.secondCall, ['foo', 'bar']);
     sinon.assert.calledWith(spy.lastCall, ['foo', 'bar', 'baz']);
   });
+
+  it('allows tags with custom length', function () {
+    render({ minTagLength: 2 });
+
+    addTagOnEnter('fo');
+
+    assert.equal($('.pill', div).length, 1);
+    assert.equal($('.pill .tag', div)[0].textContent, 'fo');
+  });
 });
 

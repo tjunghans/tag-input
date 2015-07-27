@@ -50,6 +50,7 @@ React.render(React.createElement(tagInput),
 ## Component Props
 
 - `onTagChange`: called when a tag is added or removed. Called with tags array.
+- `minTagLength`: Set the minimum character length of a tag. Default is 3.
 - `cssClass`: optional css class for container
 
 
