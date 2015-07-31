@@ -51,45 +51,95 @@ describe('component', function () {
     it('focuses on input on render', function () {
       assert(document.activeElement === $('input.new-tag', div)[0]);
     });
+  });
 
-    it('adds tag if comma is detected', function () {
-      TestUtils.Simulate.change(input, {target: { value: 'foo,' }});
+  it('adds tag if comma is detected', function () {
+    var spy = sinon.spy();
 
-      assert.equal($('.tag', div).length, 1);
-      assert.equal($('.tag', div)[0].textContent, 'foo');
+    render({
+      userInput: 'foo,',
+      onTagChange: spy
     });
+
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['foo']);
   });
 
   it('adds tag on enter', function () {
+    var spy = sinon.spy();
     render({
-      userInput: 'foo'
+      userInput: 'foo',
+      onTagChange: spy
+    });
+
+    TestUtils.Simulate.keyUp(input, {keyCode: 13});
+
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['foo']);
+  });
+
+  it('adds another tag', function () {
+    var spy = sinon.spy();
+    render({
+      userInput: 'bar',
+      tags: ['foo'],
+      onTagChange: spy
     });
 
     TestUtils.Simulate.keyUp(input, {keyCode: 13});
 
     assert.equal($('.tag', div).length, 1);
     assert.equal($('.tag', div)[0].textContent, 'foo');
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['foo', 'bar']);
   });
 
-  it('adds another tag', function () {
-    var component = render({
-      userInput: 'bar'
+  it('adds multiple tags (via copy & paste)', function () {
+    var spy = sinon.spy();
+    var spyInputChange = sinon.spy();
+    render({
+      onTagChange: spy,
+      onInputChange: spyInputChange
     });
-    component.setState({tags: ['foo']});
 
-    TestUtils.Simulate.keyUp(input, {keyCode: 13});
+    TestUtils.Simulate.change(input, {target: {
+      value: 'java, soccer,foobar, yoghurt,  java'
+    }});
 
-    assert.equal($('.tag', div).length, 2);
-    assert.equal($('.tag', div)[0].textContent, 'foo');
-    assert.equal($('.tag', div)[1].textContent, 'bar');
+    assert.equal(spy.callCount, 4);
+    sinon.assert.calledTwice(spyInputChange);
+    sinon.assert.calledWith(spyInputChange.lastCall, '');
+  });
+
+  it('parses props userInput', function () {
+    var spy = sinon.spy();
+    render({
+      userInput: 'foo, quux',
+      tags: ['foo', 'bar', 'baz'],
+      onTagChange: spy
+    });
+
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['foo', 'bar', 'baz', 'quux']);
+  });
+
+  it('parses props userInput with many tags', function () {
+    var spy = sinon.spy();
+    render({
+      userInput: 'java, soccer,foobar, yoghurt,  java',
+      onTagChange: spy
+    });
+
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['java', 'soccer', 'foobar', 'yoghurt']);
   });
 
   it('ignores duplicate tags', function () {
     var clock = sinon.useFakeTimers();
-    var component = render({
-      userInput: 'foo'
+    render({
+      userInput: 'foo',
+      tags: ['foo']
     });
-    component.setState({tags: ['foo']});
 
     TestUtils.Simulate.keyUp(input, {keyCode: 13});
 
@@ -104,51 +154,62 @@ describe('component', function () {
   });
 
   it('removes tag on backspace', function () {
-    var component = render();
-    component.setState({tags: ['foo']});
-
-    assert.equal($('.pill', div).length, 1);
+    var spy = sinon.spy();
+    render({
+      tags: ['foo'],
+      onTagChange: spy
+    });
 
     TestUtils.Simulate.keyDown(input, {keyCode: 8}); // Backspace
 
-    assert.equal($('.pill', div).length, 0);
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, []);
+  });
+
+  it('does not remove tag if input has contents', function () {
+    var spy = sinon.spy();
+    var inputSpy = sinon.spy();
+    render({
+      userInput: 'f',
+      tags: ['bar'],
+      onTagChange: spy,
+      onInputChange: inputSpy
+    });
+
+    TestUtils.Simulate.keyDown(input, {keyCode: 8}); // Backspace
+    TestUtils.Simulate.change(input, {target: { value: '' }});
+
+    sinon.assert.notCalled(spy);
+    sinon.assert.calledOnce(inputSpy);
+    sinon.assert.calledWith(inputSpy, '');
   });
 
   it('removes tag on click', function () {
-    var component = render();
-    component.setState({tags: ['foo']});
+    var spy = sinon.spy();
+    render({
+      tags: ['foo'],
+      onTagChange: spy
+    });
 
     assert.equal($('.pill', div).length, 1);
 
     TestUtils.Simulate.click($('.remove', div)[0]);
 
-    assert.equal($('.pill', div).length, 0);
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, []);
   });
 
   it('trims whitespace', function () {
+    var spy = sinon.spy();
     render({
-      userInput: '   foo       '
+      userInput: '   foo       ',
+      onTagChange: spy
     });
 
     TestUtils.Simulate.keyUp(input, {keyCode: 13});
 
-    assert.equal($('.tag', div)[0].textContent, 'foo');
-  });
-
-  it('does not remove tag if input has contents', function () {
-    var component = render({
-      userInput: 'f'
-    });
-    component.setState({tags: ['bar']});
-
-    TestUtils.Simulate.keyDown(input, {keyCode: 8}); // Backspace
-
-    assert.equal($('.pill', div).length, 1);
-
-    input.value = ''; // force empty
-    TestUtils.Simulate.keyDown(input, {keyCode: 8}); // Backspace
-
-    assert.equal($('.pill', div).length, 0);
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy, ['foo']);
   });
 
   it('yields callback with tags', function () {
@@ -165,15 +226,17 @@ describe('component', function () {
   });
 
   it('allows tags with custom length', function () {
+    var spy = sinon.spy();
     render({
       userInput: 'fo',
-      minTagLength: 2
+      minTagLength: 2,
+      onTagChange: spy
     });
 
     TestUtils.Simulate.keyUp(input, {keyCode: 13});
 
-    assert.equal($('.pill', div).length, 1);
-    assert.equal($('.pill .tag', div)[0].textContent, 'fo');
+    sinon.assert.calledOnce(spy);
+    sinon.assert.calledWith(spy.firstCall, ['fo']);
   });
 
   it('listens to input changes', function () {
