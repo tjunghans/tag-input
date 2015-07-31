@@ -84,6 +84,40 @@ describe('component', function () {
     assert.equal($('.tag', div)[1].textContent, 'bar');
   });
 
+  it('adds multiple tags via copy & paste', function () {
+    var spy = sinon.spy();
+    var spyInputChange = sinon.spy();
+    render({
+      onTagChange: spy,
+      onInputChange: spyInputChange
+    });
+
+    TestUtils.Simulate.change(input, {target: {
+      value: 'java, soccer,foobar, yoghurt,  java'
+    }});
+
+    assert.equal($('.tag', div).length, 4);
+    assert.equal(spy.callCount, 4);
+    sinon.assert.calledTwice(spyInputChange);
+    sinon.assert.calledWith(spyInputChange.lastCall, '');
+  });
+
+  it('parses props userInput', function () {
+    render({
+      userInput: 'java,'
+    });
+
+    assert.equal($('.tag', div).length, 1);
+  });
+
+  it('parses props userInput with many tags', function () {
+    render({
+      userInput: 'java, soccer,foobar, yoghurt,  java'
+    });
+
+    assert.equal($('.tag', div).length, 4);
+  });
+
   it('ignores duplicate tags', function () {
     var clock = sinon.useFakeTimers();
     var component = render({
