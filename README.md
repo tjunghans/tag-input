@@ -38,16 +38,14 @@ npm start & npm run watch
 
 ## Usage
 
-- Version 2.0
+- Version 2.x
 - Version 1.3 (deprecated)
 
 
-### Version 2.0
+### Version 2.x
 
-The component has been simplified in order to make it reusable in situations
-where it was not used standalone (eg. with an auto suggester). This requires
-a parent component (below that is `tagInputContainer`) to manage the userInput.
-Previously this was handled in `tag-input`'s own state.
+The `userInput` and `tags` states have been removed in order to make it the componetn reusable in situations where it was used as a child component.
+In order to make use of this component a parent component is required. The parent component manages the userInput and tags state. It listens to changes and re-renderers the `tag-input`component. Have a look at the following example:
 
 ```javascript
 'use strict';
@@ -58,7 +56,8 @@ var tagInputComponent = require('../');
 var tagInputContainer = React.createClass({
   getInitialState: function () {
     return {
-      userInput: ''
+      userInput: '',
+      tags: []
     };
   },
   render: function () {
@@ -66,11 +65,13 @@ var tagInputContainer = React.createClass({
     return (
       React.DOM.div(null, React.createElement(tagInputComponent, {
         userInput: self.state.userInput,
+        tags: self.state.tags,
         onInputChange: function (input) {
           self.setState({ userInput: input });
         },
         onTagChange: function (tags) {
-          console.log(tags);
+          self.setState({ tags: tags });
+          // save the tags here
         }
       }))
     );
@@ -99,6 +100,8 @@ React.render(React.createElement(tagInput),
 - `onTagChange`: called when a tag is added or removed. Called with tags array.
 - `minTagLength`: Set the minimum character length of a tag. Default is 3.
 - `cssClass`: optional css class for container
+- `tags`: array of strings that represent the tags
+- `userInput`: the value of the input
 
 
 ## License

@@ -6,7 +6,8 @@ var tagInputComponent = require('../');
 var tagInputContainer = React.createClass({
   getInitialState: function () {
     return {
-      userInput: ''
+      userInput: '',
+      tags: []
     };
   },
   render: function () {
@@ -14,10 +15,12 @@ var tagInputContainer = React.createClass({
     return (
       React.DOM.div(null, React.createElement(tagInputComponent, {
         userInput: self.state.userInput,
+        tags: self.state.tags,
         onInputChange: function (input) {
           self.setState({ userInput: input });
         },
         onTagChange: function (tags) {
+          self.setState({ tags: tags });
           console.log(tags);
         }
       }))
